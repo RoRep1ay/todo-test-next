@@ -134,7 +134,7 @@ export default function TodoComponent(props: TodoProp) {
         </> :
         <>
           <div className='py-1'>
-            <input className='ml-3' type="text" onChange={onInputChange} value={editTodo} onKeyUp={onKeyPress} />
+            <input className='ml-3' style={{ width: '400px' }} type="text" onChange={onInputChange} value={editTodo} onKeyUp={onKeyPress} />
             <button className='ml-3' onClick={onEdit} disabled={isDisabled}>Update</button>
             <button className='ml-3' onClick={onCancel} disabled={isDisabled}>Cancel</button>
           </div>
