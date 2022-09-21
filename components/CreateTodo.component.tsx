@@ -3,6 +3,7 @@ import { API_ENDPOINT } from '../models/constants';
 
 export default function CreateTodoComponent(props: any) {
   const [showError, setShowError] = useState(false);
+  const [isDisabled, setIsDisabled] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [newTodo, setNewTodo] = useState('');
 
@@ -11,6 +12,8 @@ export default function CreateTodoComponent(props: any) {
       setShowError(true);
       return;
     }
+
+    setIsDisabled(true);
     const result = await fetch(`${API_ENDPOINT}`, {
       method: 'POST',
       headers: {
@@ -21,6 +24,7 @@ export default function CreateTodoComponent(props: any) {
         isCompleted: false
       }),
     });
+    setIsDisabled(false);
       if (result.status === 200) {
         setNewTodo('');
         setShowError(false);
@@ -56,7 +60,7 @@ export default function CreateTodoComponent(props: any) {
     <div className=''>
       <input type='text' autoFocus className='width-40' value={newTodo} onChange={onValueChange} onKeyUp={onKeyPress} />
 
-      <button onClick={onCreate} className='ml-3'>Create</button>
+      <button onClick={onCreate} disabled={isDisabled} className='ml-3'>Create</button>
 
     </div>
     {
