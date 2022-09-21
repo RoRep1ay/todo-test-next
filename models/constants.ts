@@ -1,2 +1,2 @@
-export const URL_ENDPOINT = 'http://localhost:3000'
+export const URL_ENDPOINT = `${ process.env.BASE_URL }`;
 export const API_ENDPOINT = `${URL_ENDPOINT}/api/todos`;

@@ -2,14 +2,13 @@ import { FirebaseOptions, getApp, initializeApp } from "firebase/app";
 import { collection, getDocs, getFirestore, orderBy, query } from "firebase/firestore";
 import { firebaseToModel, TodoView } from "../models/Todo.model";
 
-console.log('asd', process.env.F_API_KEY);
 const config: FirebaseOptions = {
-  apiKey: process.env.F_API_KEY || "",
-  authDomain: process.env.F_AUTH_DOMAIN || "",
-  projectId: process.env.F_PROJECT_ID || "",
-  storageBucket: process.env.F_BUCKET || "",
-  messagingSenderId: process.env.F_SENDER_ID || "",
-  appId: process.env.F_APP_ID || ""
+  apiKey: process.env.NEXT_PUBLIC_FAPI_KEY || "",
+  authDomain: process.env.NEXT_PUBLIC_FAUTH_DOMAIN || "todo-interview-d6b98.firebaseapp.com",
+  projectId: process.env.NEXT_PUBLIC_FPROJECT_ID || "todo-interview-d6b98",
+  storageBucket: process.env.NEXT_PUBLIC_FBUCKET || "todo-interview-d6b98.appspot.com",
+  messagingSenderId: process.env.NEXT_PUBLIC_FSENDER_ID || "986656118120",
+  appId: process.env.NEXT_PUBLIC_FAPP_ID || "1:986656118120:web:5e759b9d7eb7088a3cf2dd"
 };
 
 function createFirebaseApp(config: FirebaseOptions, retry = 0) {

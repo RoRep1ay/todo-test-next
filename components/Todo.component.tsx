@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { API_ENDPOINT } from '../models/constants';
-import ModalComponent from './Modal.component';
 
 type TodoProp = {
   onToggle: Function;
@@ -11,7 +10,6 @@ type TodoProp = {
 
 export default function TodoComponent(props: TodoProp) {
   const [editMode, setEditMode] = useState(false);
-  const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [showButton, setShouldShowButton] = useState(false);
   const [showError, setShowError] = useState<boolean>(false);
   const [errorMessage, setShowErrorMessage] = useState('');
@@ -127,7 +125,5 @@ export default function TodoComponent(props: TodoProp) {
       }
     </div>
     { showError && errorMessage ? <div className=''><p className='ml-4 text-error'>{errorMessage}</p></div> : null}
-
-    {showConfirmModal ? <ModalComponent /> : null}
   </>
 }
