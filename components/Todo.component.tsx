@@ -12,24 +12,25 @@ export default function TodoComponent(props: TodoProp) {
   const [editMode, setEditMode] = useState(false);
   const [showButton, setShouldShowButton] = useState(false);
   const [showError, setShowError] = useState<boolean>(false);
+  const [isDisabled, setIsDisabled] = useState(false);
   const [errorMessage, setShowErrorMessage] = useState('');
   const [editTodo, setEditTodo] = useState(props.todo);
 
   const onChange = async ($event: any) => {
     const updated = !props.isCompleted;
-    const res = await fetch(`${ API_ENDPOINT }/${props.id}`, {
+    const res = await fetch(`${API_ENDPOINT}/${props.id}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify( {
+      body: JSON.stringify({
         isCompleted: updated,
-      } ),
+      }),
     });
     if (res.status !== 200) {
       setShowErrorMessage(`Fail to update. Please try again later`);
       setShowError(true);
-    } else  {
+    } else {
       setShowErrorMessage(``);
       setShowError(false);
     }
@@ -41,26 +42,28 @@ export default function TodoComponent(props: TodoProp) {
       setShowError(true);
       return;
     }
-      const res = await fetch(`${ API_ENDPOINT }/${props.id}`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify( {
-          todo: editTodo,
-        } ),
-      });
-      if (res.status === 200) {
-        setEditMode(false);
-        setShowErrorMessage('');
-        setShowError(false);
-      } else if (res.status === 400) {
-        setShowErrorMessage(`${ editTodo } is already exists in the list`);
-        setShowError(true);
-      } else {
-        setShowErrorMessage(`Fail to update. Please try again later`);
-        setShowError(true);
-      }
+    setIsDisabled(true);
+    const res = await fetch(`${API_ENDPOINT}/${props.id}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        todo: editTodo,
+      }),
+    });
+    setIsDisabled(false);
+    if (res.status === 200) {
+      setEditMode(false);
+      setShowErrorMessage('');
+      setShowError(false);
+    } else if (res.status === 400) {
+      setShowErrorMessage(`${editTodo} is already exists in the list`);
+      setShowError(true);
+    } else {
+      setShowErrorMessage(`Fail to update. Please try again later`);
+      setShowError(true);
+    }
   }
 
   const onInputChange = ($event: any) => {
@@ -103,13 +106,26 @@ export default function TodoComponent(props: TodoProp) {
     }
   }
 
+  const onCancel= () => {
+    if (showError) {
+      setShowError(false);
+    }
+    if (errorMessage) {
+      setShowErrorMessage('');
+    }
+    if (editTodo !== props.todo) {
+      setEditTodo(props.todo);
+    }
+    setEditMode(false);
+  }
+
   return <>
     <div className='flex py-1' onMouseEnter={() => setShouldShowButton(true)} onMouseLeave={() => setShouldShowButton(false)}>
       <input type="checkbox" checked={props.isCompleted} onChange={onChange} />
       {!editMode ?
         <>
           <span className={'ml-3 ' + (props.isCompleted ? 'line-through' : '')}>{props.todo}</span>
-          {showButton ? 
+          {showButton ?
             <>
               <button className='ml-3' onClick={() => setEditMode(true)}>Edit </button>
               <button className='ml-2' onClick={() => propmpUser()}>Delete </button>
@@ -118,12 +134,13 @@ export default function TodoComponent(props: TodoProp) {
         </> :
         <>
           <div className='py-1'>
-            <input className='ml-3' type="text" onChange={onInputChange} value={editTodo} onKeyUp={onKeyPress} />
-            <button className='ml-3' onClick={onEdit}>Create</button>
+            <input className='ml-3' style={{ width: '400px' }} type="text" onChange={onInputChange} value={editTodo} onKeyUp={onKeyPress} />
+            <button className='ml-3' onClick={onEdit} disabled={isDisabled}>Update</button>
+            <button className='ml-3' onClick={onCancel} disabled={isDisabled}>Cancel</button>
           </div>
         </>
       }
     </div>
-    { showError && errorMessage ? <div className=''><p className='ml-4 text-error'>{errorMessage}</p></div> : null}
+    {showError && errorMessage ? <div className=''><p className='ml-4 text-error'>{errorMessage}</p></div> : null}
   </>
 }
